@@ -1,7 +1,3 @@
-#property copyright "Forex Software Ltd."
-#property version   "2.12"
-#property strict
-
 static input string StrategyProperties__ = "------------"; // ------ Expert Properties ------
 static input double Entry_Amount = 0.01; // Entry lots
 input int Stop_Loss   = 86; // Stop Loss (pips)
