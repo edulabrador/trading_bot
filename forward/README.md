@@ -28,6 +28,38 @@ darle un magic distinto y anadirlo a `bots.json`.
 - **Broker:** el mismo que usarias en real, con hora de servidor GMT+2/GMT+3.
   Apunta el spread tipico de cada par.
 
+## Antes de la demo: comprobar el EA en el Strategy Tester
+
+Antes de dejarlo correr en demo, comprueba que el `.mq4` hace lo mismo que el
+backtest en Python:
+
+1. Compila el EA en MetaEditor.
+2. Pasalo por el Strategy Tester de MT4 con datos de tu broker, en un periodo
+   que este en el backtest (por ejemplo 2024-2025) y con el mismo par y
+   timeframe.
+3. En la pestana **Report**, haz clic derecho, elige **Save as Report** y guarda
+   el `.htm`.
+4. Compara:
+
+```bash
+python forward/tester_compare.py StrategyTester.htm --magic 43898 --tol-hours 2    # EMA100 v6 (H1)
+python forward/tester_compare.py StrategyTester.htm --magic 22001 --tol-hours 48   # S2-M1 en S&P 500 (D1)
+```
+
+Empareja cada trade de MT4 con el del backtest por hora de entrada y da un
+veredicto:
+- **OK:** al menos el 90% de los trades coinciden, y salen en el mismo momento.
+- **REVISAR:** coincide entre el 70% y el 90%.
+- **NO COINCIDE:** menos del 70%.
+
+Ademas guarda un CSV con el detalle, incluidas las filas "solo en MT4" y "solo en
+backtest". Las causas tipicas de diferencias son:
+- la hora del servidor (prueba con `--tol-hours` mayor, o compara con otra zona
+  horaria);
+- el corte de la vela diaria en los indices;
+- festivos y horario del CFD;
+- el spread del broker (pequenas diferencias de precio son normales).
+
 ## Cada mes (o cada trimestre)
 
 1. En MetaTrader, abre la pestana **Historial de cuenta**, haz clic derecho y
