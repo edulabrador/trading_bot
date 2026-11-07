@@ -118,6 +118,12 @@ class P:
     rsi_hi: float = 90.0
     sma_trend: int = 200
     sma_exit: int = 5
+    # variantes de mejora de S2 (PRUEBAS_EXIGENTES.md); por defecto = S2 original
+    exit_mode: str = "sma"       # "sma" (cierre > SMA5) o "rsi" (RSI(2) > exit_rsi)
+    exit_rsi: float = 70.0
+    emerg_stop_atr: float = 0.0  # >0: stop de emergencia a N x ATR
+    vol_filter_pct: float = 0.0  # >0: no entrar si ATR/precio > percentil (p.ej. 90) de 252 dias
+    time_stop_days: int = 0      # >0: cerrar tras N dias de trading
 
 
 def signals(d: pd.DataFrame, strat: str, p: P) -> pd.DataFrame:
@@ -137,7 +143,14 @@ def signals(d: pd.DataFrame, strat: str, p: P) -> pd.DataFrame:
         ex = c.rolling(p.sma_exit).mean()
         s["long"] = (c > trend) & (r < p.rsi_lo)
         s["short"] = ((c < trend) & (r > p.rsi_hi)) if strat == "S3" else False
-        s["exit_long"], s["exit_short"] = c > ex, c < ex
+        if p.vol_filter_pct > 0:
+            nv = atr(d, p.atr_n) / c
+            lim = nv.rolling(252, min_periods=120).quantile(p.vol_filter_pct / 100)
+            s["long"] = s["long"] & ~(nv > lim)
+        if p.exit_mode == "rsi":
+            s["exit_long"], s["exit_short"] = r > p.exit_rsi, r < 100 - p.exit_rsi
+        else:
+            s["exit_long"], s["exit_short"] = c > ex, c < ex
     s["atr"] = atr(d, p.atr_n)
     return s.fillna(False)
 
@@ -156,7 +169,9 @@ def backtest(d, strat, p, spread, rand=None):
         else:
             up = rng.random(len(d)) < 0.5
             L, S = hit & up, hit & ~up
-    use_stop = strat == "S1"
+    use_stop = strat == "S1" or p.emerg_stop_atr > 0
+    stop_mult = p.stop_atr if strat == "S1" else p.emerg_stop_atr
+    ei = 0
     idx = d.index
     trades = []
     pos = 0
@@ -173,8 +188,13 @@ def backtest(d, strat, p, spread, rand=None):
             pos = 1 if L[i - 1] else -1
             entry = o[i] + half * pos
             risk = A[i - 1]
-            stop = entry - pos * p.stop_atr * risk
+            stop = entry - pos * stop_mult * risk
             et = idx[i]
+            ei = i
+        # 1b) cierre por tiempo (en la apertura tras N dias)
+        if pos != 0 and p.time_stop_days > 0 and i - ei >= p.time_stop_days:
+            px = o[i] - half if pos == 1 else o[i] + half
+            trades.append((et, idx[i], pos, entry, px, risk)); pos = 0
         # 2) stop dentro del dia
         if use_stop and pos != 0:
             if pos == 1 and (o[i] <= stop or l[i] <= stop):

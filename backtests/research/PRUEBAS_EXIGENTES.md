@@ -71,3 +71,23 @@ del riesgo. Se adopta si en desarrollo mejora al menos un 10% el cociente
 (beneficio / |drawdown maximo|), **y** en el holdout ese cociente no es peor que
 con lotes fijos. El holdout del EMA100 con lotes fijos ya se conoce; el de esta
 variante, no.
+
+## Enmienda: indices de validacion (antes de ejecutar la validacion)
+
+Escrita despues de elegir la variante (M1) y **antes** de ejecutar la
+validacion. Dukascopy empezo a cortar todas las conexiones y solo llegaron 3
+de los 95 archivos de indices nuevos. Por eso se usa un conjunto coherente de
+indices Yahoo publicado en GitHub (`hodacnghia/Graduation-thesis`), que cubre
+de 2006 a mayo de 2018.
+
+Regla mecanica para elegir la lista, sin mirar resultados: indices amplios de
+mercados desarrollados, con OHLC y al menos 3,000 sesiones desde 2006, sin
+incluir indices de EE. UU. (se solapan con S&P 500 y Nasdaq).
+
+- **Resultado:** Nikkei 225, CAC 40, ASX 200, AEX, IBEX 35, S&P/TSX y NZX 50.
+- **Excluidos por falta de datos:** FTSE 100 (300 sesiones) y Hang Seng (1,235).
+- **Euro Stoxx 50:** no hay datos OHLC completos.
+- **Spread fijo:** Nikkei 10, CAC 1.5, ASX 2, AEX 0.15, IBEX 5, TSX 5, NZX 50 5
+  puntos (en torno al 0.02-0.05% del precio).
+
+Las reglas de generalizacion y de adopcion de la variante no cambian.
