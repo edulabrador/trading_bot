@@ -4,3 +4,4 @@ ema100_gbpjpy_h1,1,V0_baseline,80,1.28,2204,27.55,1.04,-920
 ema100_gbpjpy_h1,1,V2_d1_trend200,65,1.022,153,2.36,0.08,-1131
 mq4_usdjpy_h4,1,V0_baseline,84,0.841,-433,-5.15,-0.59,-823
 mq4_usdjpy_h4,1,V5_carry_long_only,33,1.074,77,2.32,0.15,-532
+mq4_eurusd_h1,2,R2c_noexit+atr+trend (EXPLORATORIO: revelado fuera del protocolo a peticion del usuario; no paso las reglas),21,1.02,40,1.9,0.04,-1344

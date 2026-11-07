@@ -28,6 +28,24 @@ para los EAs MQ4): [`mq4_eurusd_h1.md`](mq4_eurusd_h1.md),
 [`mq4_usdjpy_h4.md`](mq4_usdjpy_h4.md), [`mq4_gbpjpy_h4.md`](mq4_gbpjpy_h4.md),
 [`ea_gbpjpy_h1_ema100_v5.md`](ea_gbpjpy_h1_ema100_v5.md).
 
+## Candidatos para demo (noviembre de 2026)
+
+En [`../../demo/`](../../demo/) hay tres `.mq4` listos para compilar: EMA100 v6
+(candidato principal), USDJPY H4 solo compras y EURUSD R2c (hipotesis). Los
+tres pasaron por la bateria completa:
+
+| | PF total | PF holdout (desde 10/07/2023) | Pips holdout |
+|---|---|---|---|
+| EMA100 v6 | 1.16 | **1.28** | **+2,204** |
+| USDJPY solo compras | 1.34 | 1.07 | +77 |
+| EURUSD R2c | 1.75 | 1.02 | +40 |
+
+Solo el EMA100 v6 mantiene la ventaja fuera de muestra. Las otras dos variantes
+se ven muy bien en el periodo con el que se eligieron y quedan planas despues.
+Combinar los tres reduce el drawdown a la mitad, pero casi toda la ganancia
+reciente sigue viniendo del EMA100. Detalle en
+[`../research/RESULTADOS.md`](../research/RESULTADOS.md).
+
 ## Los tres EAs MQ4 del repo
 
 Primer analisis: traduccion a Python de cada `.mq4`, con datos H1 de Dukascopy

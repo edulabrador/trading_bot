@@ -150,6 +150,10 @@ def main() -> None:
     fnames = {f.name for f in fields(cfg0)}
     plist = a.params.split(",") if a.params else getattr(ea, "SENS_PARAMS", DEFAULT_PARAMS)
     params = [p for p in plist if p in fnames]
+    atr_mode = getattr(cfg0, "sl_atr_mult", 0) > 0 and getattr(cfg0, "tp_atr_mult", 0) > 0
+    SLK, TPK = ("sl_atr_mult", "tp_atr_mult") if atr_mode else ("stop_loss_pips", "take_profit_pips")
+    if atr_mode:  # con SL/TP por ATR, los pips fijos no se usan: se perturban los multiplos
+        params = [{"stop_loss_pips": SLK, "take_profit_pips": TPK}.get(p, p) for p in params]
 
     md: list[str] = []
 
@@ -368,13 +372,14 @@ def main() -> None:
     say(f"\nTodos los parametros +-20% a la vez ({n_joint} combinaciones): PF>1 en {(jr[:, 0] > 1).sum()}/{n_joint}, "
         f"PF mediana {np.nanmedian(jr[:, 0]):.2f}, p5 {np.nanpercentile(jr[:, 0], 5):.2f}"
         + (f"; OOS PF>1 en {(jr[:, 1] > 1).sum()}/{n_joint}" if split is not None else ""))
-    if {"stop_loss_pips", "take_profit_pips"} <= fnames:
-        sl0, tp0 = cfg0.stop_loss_pips, cfg0.take_profit_pips
+    if {SLK, TPK} <= fnames:
+        sl0, tp0 = getattr(cfg0, SLK), getattr(cfg0, TPK)
         grid = {}
         for fs in (0.6, 0.8, 1.0, 1.2, 1.5):
             for ft in (0.5, 0.75, 1.0, 1.25, 1.6):
-                tt, _, _ = run(replace(cfg0, stop_loss_pips=round(sl0 * fs), take_profit_pips=round(tp0 * ft)))
-                grid[(round(sl0 * fs), round(tp0 * ft))] = summary(tt)["PF"]
+                rd = (lambda x: round(x, 2)) if atr_mode else round
+                tt, _, _ = run(replace(cfg0, **{SLK: rd(sl0 * fs), TPK: rd(tp0 * ft)}))
+                grid[(rd(sl0 * fs), rd(tp0 * ft))] = summary(tt)["PF"]
         g = pd.Series(grid).unstack()
         g.index.name = "SL \\ TP"
         say("\nPF por SL (filas) x TP (columnas):\n")
@@ -395,6 +400,8 @@ def main() -> None:
     # 7. walk-forward -----------------------------------------------------------------------
     say("\n## 7. Walk-forward\n")
     wf_keys = [k for k in getattr(ea, "WF_PARAMS", ("fi_period", "stop_loss_pips", "take_profit_pips")) if k in fnames]
+    if atr_mode:
+        wf_keys = [{"stop_loss_pips": SLK, "take_profit_pips": TPK}.get(k, k) for k in wf_keys]
     if wf_keys:
         levels = [(0.75, 1.0, 1.3)] * len(wf_keys)
         combos = [dict(zip(wf_keys, c)) for c in np.array(np.meshgrid(*levels)).T.reshape(-1, len(wf_keys))]
@@ -417,7 +424,7 @@ def main() -> None:
             bt = cache[best]
             o = bt[(bt.exit_time >= B) & (bt.exit_time < C)].pnl_pips
             base_y = t[(t.exit_time >= B) & (t.exit_time < C)].pnl_pips
-            rows.append({"anio": ty, "params " + "/".join(wf_keys): "/".join(f"{v:.0f}" for v in best),
+            rows.append({"anio": ty, "params " + "/".join(wf_keys): "/".join(f"{v:.2f}" if abs(v) < 10 else f"{v:.0f}" for v in best),
                          "IS pips/anio": round(score(bt) / tr), "OOS pips": round(o.sum()), "OOS trades": len(o),
                          "base pips": round(base_y.sum())})
         wf = pd.DataFrame(rows)

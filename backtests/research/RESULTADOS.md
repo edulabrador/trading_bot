@@ -115,3 +115,49 @@ demo**, con datos que todavia no existen:
 
 - EMA100 v6 (candidato principal).
 - Opcionalmente, como hipotesis: USDJPY H4 V5 (solo largos) y EURUSD R2c.
+
+## Bateria completa de los candidatos (noviembre de 2026)
+
+Los tres candidatos pasaron por `run_tests.py` completo, con corte en el
+10/07/2023. Informes: [`cand_ema100_v6.md`](../reports/cand_ema100_v6.md),
+[`cand_usdjpy_buyonly.md`](../reports/cand_usdjpy_buyonly.md),
+[`cand_eurusd_r2c.md`](../reports/cand_eurusd_r2c.md) y cartera
+[`cartera_candidatos.md`](../reports/cartera_candidatos.md).
+
+El holdout de EURUSD R2c se revelo **fuera del protocolo**, a peticion del
+usuario, y queda marcado como exploratorio en `logs/holdout.csv`.
+
+| | EMA100 v6 | USDJPY solo compras | EURUSD R2c |
+|---|---|---|---|
+| Trades (total / holdout) | 530 / 80 | 283 / 33 | 101 / 21 |
+| PF total | 1.16 | 1.34 | 1.75 |
+| PF holdout | **1.28** | 1.07 | 1.02 |
+| Pips holdout | **+2,204** | +77 | +40 |
+| t-stat total | 1.64 | 1.77 | 2.51 |
+| Drawdown maximo (pips) | -6,171 | -972 | -2,104 |
+| Tiempo maximo sin nuevo maximo | 3,431 dias | 1,842 dias | 1,439 dias |
+| Entrada vs azar (total / holdout) | percentil 77 / 55 | 93 / 57 | 100 / 80 |
+| Parametros +-20%: PF > 1 (total / holdout) | 150/150 / 150/150 | 150/150 / 147/150 | 145/150 / 60/150 |
+| Walk-forward: anios positivos, eficiencia | 10/17, 0.45 | 10/16, 0.60 | 11/16, 0.21 |
+| P(perder en 1 anio) | 33% | 35% | 27% |
+| PF con spread de 6 pips | 1.13 | 1.13 | 1.70 |
+
+Nota: el benchmark aleatorio del EMA100 da ahora percentil 77, y no 88 como en
+el primer informe, porque las entradas aleatorias respetan tambien el filtro
+EMA100. Es la comparacion mas justa.
+
+**Lectura:**
+
+- **EMA100 v6** es el unico con un holdout claramente positivo y totalmente
+  robusto ante cambios de parametros, tambien en el holdout. Su debilidad
+  sigue siendo el riesgo (9.4 anios sin maximos) y que su entrada apenas
+  supera al azar.
+- **USDJPY solo compras** y **EURUSD R2c** brillan en el periodo con el que se
+  eligieron y quedan planos en el holdout. Es el patron tipico de una mejora
+  que se ajusto al pasado. En EURUSD R2c solo 60 de 150 combinaciones de
+  parametros son rentables en el holdout.
+- **Cartera (0.01 lotes cada uno):** las correlaciones mensuales entre bots son
+  casi nulas (-0.02 a 0.13). El drawdown de la cartera (-351) es la mitad de la
+  suma de los individuales (-710), y solo 2 de 21 anios son negativos. Pero en
+  el holdout la cartera gana +164, de los que +154 son del EMA100. La
+  diversificacion reduce el riesgo, no crea ventaja.

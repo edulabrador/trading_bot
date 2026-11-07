@@ -8,6 +8,7 @@ del bot es real o es un artefacto del periodo en el que se optimizo?**
 backtests/
   dukascopy.py                  descarga velas H1 BID/ASK de Dukascopy -> CSV
   run_tests.py                  bateria de pruebas (8 bloques) -> report.md
+  portfolio.py                  combina trades de varios bots: cartera, correlacion, Monte Carlo
   engine.py                     motor generico estilo MT4/EA Studio + indicadores MT4
   bots/
     ea_gbpjpy_h1_ema100_v5.py   backtester v5 del EA GBPJPY H1 EMA100 BUY ONLY

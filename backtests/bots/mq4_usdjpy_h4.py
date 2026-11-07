@@ -60,7 +60,7 @@ def get_presets() -> dict:
     b = Config()
     return {"baseline": b,
             "baseline_fixed_spread": replace(b, name="baseline_fixed_spread", use_bar_spread=False),
-            "buy_only": replace(b, name="buy_only", direction_mode="buy_only"),
+            "buy_only": replace(b, name="buy_only", direction_mode="buy_only"),  # candidato V5 (solo largos, carry)
             "sell_only": replace(b, name="sell_only", direction_mode="sell_only"),
             "commission": replace(b, name="commission", commission_per_lot_per_side=3.5)}
 

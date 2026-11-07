@@ -75,7 +75,10 @@ def get_presets() -> dict:
             "sell_only": replace(b, name="sell_only", direction_mode="sell_only"),
             "no_session": replace(b, name="no_session", session_mon_thu_open=0, session_mon_thu_close=86400,
                                   session_fri_open=0, session_fri_close=86400),
-            "commission": replace(b, name="commission", commission_per_lot_per_side=3.5)}
+            "commission": replace(b, name="commission", commission_per_lot_per_side=3.5),
+            # Candidato de la ronda 2 (R2c): sin salida RVI + SL/TP por ATR D1 + tendencia D1 SMA200.
+            # Multiplos calibrados en desarrollo (ATR D1 mediano 94.2 pips -> 324/94.2, 328/94.2).
+            "r2c": replace(b, name="r2c", use_signal_exit=False, sl_atr_mult=3.438, tp_atr_mult=3.481, d1_trend_sma=200)}
 
 
 def round2_variants(base: Config, sl_mult: float, tp_mult: float) -> dict:
