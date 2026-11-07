@@ -1,0 +1,32 @@
+{
+  "43898": {
+    "nombre": "EMA100 GBPJPY H1 v6",
+    "backtest": "forward/reference/43898.csv",
+    "holdout_desde": "2023-07-10"
+  },
+  "38025242": {
+    "nombre": "USDJPY H4 solo compras",
+    "backtest": "forward/reference/38025242.csv",
+    "holdout_desde": "2023-07-10"
+  },
+  "31422196": {
+    "nombre": "EURUSD H1 R2c",
+    "backtest": "forward/reference/31422196.csv",
+    "holdout_desde": "2023-07-10"
+  },
+  "38025241": {
+    "nombre": "USDJPY H4 original",
+    "backtest": "forward/reference/38025241.csv",
+    "holdout_desde": "2023-07-10"
+  },
+  "35839595": {
+    "nombre": "GBPJPY H4 original",
+    "backtest": "forward/reference/35839595.csv",
+    "holdout_desde": "2023-07-10"
+  },
+  "31422195": {
+    "nombre": "EURUSD H1 original",
+    "backtest": "forward/reference/31422195.csv",
+    "holdout_desde": "2023-07-10"
+  }
+}

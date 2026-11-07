@@ -1,0 +1,11 @@
+par,datos,ATR ratio,SL/TP,trades,PF,net,exp,t,maxDD,bot,preset
+GBPUSD,2007-01 a 2023-03,1.27,ATR,85,1.03,552,6.5,0.11,-5349,mq4_eurusd_h1,r2c
+AUDUSD,2007-01 a 2023-03,0.87,ATR,86,1.03,438,5.1,0.13,-3465,mq4_eurusd_h1,r2c
+USDCAD,2007-01 a 2023-03,0.95,ATR,82,0.75,-4230,-51.6,-1.17,-5892,mq4_eurusd_h1,r2c
+USDCHF,2007-01 a 2023-03,0.84,ATR,39,1.12,836,21.4,0.33,-2051,mq4_eurusd_h1,r2c
+NZDUSD,2007-01 a 2023-03,0.8,ATR,89,0.99,-184,-2.1,-0.07,-2890,mq4_eurusd_h1,r2c
+GBPUSD,2007-01 a 2023-03,1.27,410/416,655,0.93,-975,-1.5,-0.65,-2100,mq4_eurusd_h1,baseline
+AUDUSD,2007-01 a 2023-03,0.87,280/284,634,1.07,578,0.9,0.54,-765,mq4_eurusd_h1,baseline
+USDCAD,2007-01 a 2023-03,0.95,308/312,575,0.8,-1742,-3.0,-1.75,-1958,mq4_eurusd_h1,baseline
+USDCHF,2007-01 a 2023-03,0.84,273/277,622,0.82,-1332,-2.1,-1.64,-1941,mq4_eurusd_h1,baseline
+NZDUSD,2007-01 a 2023-03,0.8,258/261,495,0.95,-360,-0.7,-0.4,-831,mq4_eurusd_h1,baseline

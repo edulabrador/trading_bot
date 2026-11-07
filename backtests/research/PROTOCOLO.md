@@ -73,3 +73,33 @@ y sin el, el SL/TP pasa a decidir. Variantes (con las mismas reglas):
 
 Los otros tres bots no pasan a ronda 2: los dos de GBPJPY y el de USDJPY ya
 tuvieron una variante elegida y su holdout revelado (ver resultados).
+
+## Validacion en otros mercados (anotada antes de ejecutarla)
+
+El holdout ya se ha usado en los cuatro bots. La siguiente prueba limpia
+disponible es aplicar cada bot, **sin cambiar ninguna regla**, a pares que no
+se han mirado nunca para estos bots. Si una logica tiene una ventaja real,
+deberia funcionar tambien en mercados parecidos.
+
+| Bot (variante) | Pares nuevos | Periodo |
+|---|---|---|
+| EMA100 v6 (GBPJPY H1) | EURJPY, AUDJPY, CADJPY (H1) | 2007 a 2026, Dukascopy |
+| USDJPY H4 original y solo compras | EURJPY, AUDJPY, CADJPY (H4) | 2007 a 2026, Dukascopy |
+| GBPJPY H4 original y solo compras | EURJPY, AUDJPY, CADJPY (H4) | 2007 a 2026, Dukascopy |
+| EURUSD H1 original y R2c | GBPUSD, AUDUSD, USDCAD, USDCHF, NZDUSD (H1) | 2007 a marzo de 2023, Dukascopy |
+
+Reglas de adaptacion (no son optimizacion):
+- SL/TP en pips fijos se **escalan** por la volatilidad relativa:
+  pips_nuevos = pips_originales x (ATR D1 mediano del par nuevo / ATR D1
+  mediano del par original), medido en 2007 a julio de 2023. Las variantes con
+  SL/TP por ATR (R2c) no necesitan escalado.
+- Spread fijo y conservador por par: EURJPY 2.0, AUDJPY 2.0, CADJPY 2.5,
+  GBPUSD 1.5, AUDUSD 1.2, USDCAD 1.8, USDCHF 1.8, NZDUSD 2.0 pips.
+- Mismas sesiones, mismos indicadores y mismos parametros.
+
+Regla para decir que un bot **generaliza**:
+1. PF > 1 en al menos el 60% de los pares nuevos (2 de 3 en JPY, 3 de 5 en USD).
+2. PF agregado (todos los trades de los pares nuevos juntos) >= 1.05.
+
+Un bot que no generaliza no entra en la cartera aunque su par original sea
+rentable. El que generaliza puede entrar tambien en esos pares nuevos.
