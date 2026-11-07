@@ -77,6 +77,13 @@ class BaseConfig:
     gap_aware_sl: bool = True
     close_open_position_at_end: bool = True
     direction_mode: str = "both"      # "both", "buy_only", "sell_only"
+
+    # Mejoras opcionales (0 / "" = desactivado, paridad con el EA original)
+    sl_atr_mult: float = 0.0          # SL = mult x ATR diario (dia cerrado anterior) en vez de pips fijos
+    tp_atr_mult: float = 0.0          # TP = mult x ATR diario
+    atr_period_d1: int = 14
+    d1_trend_sma: int = 0             # >0: solo largos si cierre D1 > SMA(n) D1, solo cortos si <
+    use_signal_exit: bool = True      # False: ignora la salida por senal (solo SL/TP)
     use_trend_filter: bool = False    # compatibilidad con run_tests
 
 
@@ -262,6 +269,24 @@ def count_swap_nights(entry_time, exit_time) -> int:
     return nights
 
 
+# ----------------------------------------------------------------------------- contexto diario
+def daily_context(h1: pd.DataFrame, index: pd.DatetimeIndex, cfg: BaseConfig) -> pd.DataFrame:
+    """ATR(n) diario estilo MT4 (media simple del true range) y tendencia D1 vs SMA,
+    ambos del ultimo dia CERRADO antes de cada vela (sin mirar el futuro)."""
+    d = h1.resample("D").agg({"high": "max", "low": "min", "close": "last"}).dropna()
+    pc = d["close"].shift(1)
+    tr = pd.concat([d["high"] - d["low"], (d["high"] - pc).abs(), (d["low"] - pc).abs()], axis=1).max(axis=1)
+    out = pd.DataFrame({"atr": tr.rolling(cfg.atr_period_d1).mean()}, index=d.index)
+    if cfg.d1_trend_sma > 0:
+        sm = d["close"].rolling(cfg.d1_trend_sma).mean()
+        out["trend_up"] = np.where(sm.isna(), np.nan, (d["close"] > sm).astype(float))
+    else:
+        out["trend_up"] = np.nan
+    out = out.shift(1)  # valor disponible al dia siguiente
+    day = index.normalize()
+    return out.reindex(out.index.union(day)).ffill().reindex(day).set_axis(index)
+
+
 # ----------------------------------------------------------------------------- backtest
 def backtest(h1: pd.DataFrame, cfg: BaseConfig, signals_fn: Callable,
              warmup: int = 50) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
@@ -269,6 +294,18 @@ def backtest(h1: pd.DataFrame, cfg: BaseConfig, signals_fn: Callable,
     sig = signals_fn(bars, cfg)
     le, se = sig["long_entry"].to_numpy(bool), sig["short_entry"].to_numpy(bool)
     xl, xs = sig["exit_long"].to_numpy(bool), sig["exit_short"].to_numpy(bool)
+    if not cfg.use_signal_exit:
+        xl, xs = np.zeros_like(xl), np.zeros_like(xs)
+    # filtros (no son el disparador): se aplican tambien a las entradas aleatorias del benchmark
+    fl = sig["long_filter"].to_numpy(bool) if "long_filter" in sig else np.ones(len(sig), bool)
+    fs = sig["short_filter"].to_numpy(bool) if "short_filter" in sig else np.ones(len(sig), bool)
+    d1 = daily_context(h1, bars.index, cfg)
+    if cfg.d1_trend_sma > 0:
+        up = d1["trend_up"].to_numpy(float)
+        fl = fl & (up == 1.0)
+        fs = fs & (up == 0.0)
+    le, se = le & fl, se & fs
+    atr_d1 = d1["atr"].to_numpy(float)
     if cfg.direction_mode == "buy_only":
         se = np.zeros_like(se)
     elif cfg.direction_mode == "sell_only":
@@ -327,6 +364,7 @@ def backtest(h1: pd.DataFrame, cfg: BaseConfig, signals_fn: Callable,
             lo_ok, so_ok = bool(le[i]), bool(se[i])
             if _entry_override is not None:
                 lo_ok, so_ok = _entry_override(i, lo_ok, so_ok)
+                lo_ok, so_ok = lo_ok and bool(fl[i]), so_ok and bool(fs[i])
                 if cfg.direction_mode == "buy_only":
                     so_ok = False
                 elif cfg.direction_mode == "sell_only":
@@ -334,14 +372,20 @@ def backtest(h1: pd.DataFrame, cfg: BaseConfig, signals_fn: Callable,
             if lo_ok != so_ok:  # el MQ4 no abre si ambas senales coinciden
                 d = Direction.BUY if lo_ok else Direction.SELL
                 sl_d, tp_d = cfg.stop_loss_pips * pip, cfg.take_profit_pips * pip
+                if cfg.sl_atr_mult > 0 and not np.isnan(atr_d1[i]):
+                    sl_d = cfg.sl_atr_mult * atr_d1[i]
+                if cfg.tp_atr_mult > 0 and not np.isnan(atr_d1[i]):
+                    tp_d = cfg.tp_atr_mult * atr_d1[i]
+                has_sl = cfg.stop_loss_pips > 0 or cfg.sl_atr_mult > 0
+                has_tp = cfg.take_profit_pips > 0 or cfg.tp_atr_mult > 0
                 if d == Direction.BUY:
                     entry = ask_open
-                    sl = bid_open - sl_d if cfg.stop_loss_pips > 0 else -np.inf
-                    tp = bid_open + tp_d if cfg.take_profit_pips > 0 else np.inf
+                    sl = bid_open - sl_d if has_sl else -np.inf
+                    tp = bid_open + tp_d if has_tp else np.inf
                 else:
                     entry = bid_open
-                    sl = ask_open + sl_d if cfg.stop_loss_pips > 0 else np.inf
-                    tp = ask_open - tp_d if cfg.take_profit_pips > 0 else -np.inf
+                    sl = ask_open + sl_d if has_sl else np.inf
+                    tp = ask_open - tp_d if has_tp else -np.inf
                 pos = {"dir": d, "time": ts, "entry": entry, "sl": sl, "tp": tp, "spread": sp_bar, "mae": 0.0, "mfe": 0.0}
 
         if pos is not None:

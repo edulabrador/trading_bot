@@ -361,7 +361,7 @@ def main() -> None:
         for key in params:
             v0 = getattr(cfg0, key)
             v = v0 * rng.uniform(0.8, 1.2)
-            kw[key] = max(1, int(round(v))) if isinstance(v0, int) else v
+            kw[key] = (max(1, int(round(v))) if v0 > 0 else int(round(v))) if isinstance(v0, int) else v
         tt, _, _ = run(replace(cfg0, **kw))
         jr.append((summary(tt)["PF"], summary(is_oos(tt)[1])["PF"] if split is not None else np.nan))
     jr = np.array(jr, float)

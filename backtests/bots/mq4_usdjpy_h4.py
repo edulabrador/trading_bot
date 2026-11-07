@@ -32,6 +32,7 @@ class Config(E.BaseConfig):
     pip: float = 0.01
     point: float = 0.001
     spread_pips: float = 1.2
+    use_bar_spread: bool = False   # el CSV mezcla datos sin ASK (hasta 2022) y con ASK: spread fijo en todo el periodo
     pip_value_per_lot: float = 7.0   # 1000 JPY / USDJPY ~ 140-150
 
     di_period_entry: int = 12

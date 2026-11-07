@@ -1,0 +1,14 @@
+{
+  "bot": "mq4_gbpjpy_h4",
+  "round": 1,
+  "chosen": "V5_carry_long_only",
+  "rules": {
+    "PF_dev_min": 1.1,
+    "PF_half_min": 1.0,
+    "robust_min": 0.8,
+    "rand_pct_min": 0.8,
+    "trades_dev_min": 100
+  },
+  "sl_mult": 0.445,
+  "tp_mult": 3.182
+}

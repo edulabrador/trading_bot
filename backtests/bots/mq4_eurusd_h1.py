@@ -33,6 +33,7 @@ class Config(E.BaseConfig):
     pip: float = 0.0001
     point: float = 0.00001
     spread_pips: float = 1.0
+    use_bar_spread: bool = False   # el CSV mezcla datos sin ASK (hasta 2022) y con ASK: spread fijo en todo el periodo
     pip_value_per_lot: float = 10.0
     session_mon_thu_open: int = 7200
     session_mon_thu_close: int = 79200
@@ -41,7 +42,7 @@ class Config(E.BaseConfig):
     ignore_sunday: bool = True
 
     wpr_period: int = 31
-    wpr_level: float = -24
+    wpr_level: float = -24.0
     stoch_k: int = 3
     stoch_d: int = 2          # no afecta a la linea principal
     stoch_slowing: int = 2
@@ -75,6 +76,14 @@ def get_presets() -> dict:
             "no_session": replace(b, name="no_session", session_mon_thu_open=0, session_mon_thu_close=86400,
                                   session_fri_open=0, session_fri_close=86400),
             "commission": replace(b, name="commission", commission_per_lot_per_side=3.5)}
+
+
+def round2_variants(base: Config, sl_mult: float, tp_mult: float) -> dict:
+    """Ronda 2 del protocolo (research/PROTOCOLO.md), fijada antes de ejecutarla."""
+    v4 = replace(base, use_signal_exit=False)
+    return {"R2a_noexit+trend200": replace(v4, d1_trend_sma=200),
+            "R2b_noexit+atr_sltp": replace(v4, sl_atr_mult=sl_mult, tp_atr_mult=tp_mult),
+            "R2c_noexit+atr+trend": replace(v4, sl_atr_mult=sl_mult, tp_atr_mult=tp_mult, d1_trend_sma=200)}
 
 
 def backtest(h1, cfg: Config = None, ltf=None):

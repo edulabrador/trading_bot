@@ -1,0 +1,14 @@
+{
+  "bot": "mq4_eurusd_h1",
+  "round": 1,
+  "chosen": null,
+  "rules": {
+    "PF_dev_min": 1.1,
+    "PF_half_min": 1.0,
+    "robust_min": 0.8,
+    "rand_pct_min": 0.8,
+    "trades_dev_min": 100
+  },
+  "sl_mult": 3.438,
+  "tp_mult": 3.481
+}
