@@ -33,6 +33,10 @@ para los EAs MQ4): [`mq4_eurusd_h1.md`](mq4_eurusd_h1.md),
 De tres estrategias nuevas registradas antes de ver datos
 ([`../research/NUEVAS_ESTRATEGIAS.md`](../research/NUEVAS_ESTRATEGIAS.md)),
 solo **S2** pasa: reversion a la media en S&P 500, Nasdaq 100 y DAX diarios.
+Tras las pruebas exigentes usa la salida M1 (RSI(2) > 70), validada en 7 indices
+nuevos: PF 2.12 en desarrollo y 2.19 en el holdout
+([`s2_m1_indices_rsi2.md`](s2_m1_indices_rsi2.md),
+[`../research/PRUEBAS_EXIGENTES.md`](../research/PRUEBAS_EXIGENTES.md)).
 PF 1.72 en desarrollo y **2.57 en el holdout** (97 trades), con correlacion
 0.01 con el EMA100. Informe: [`s2_indices_rsi2.md`](s2_indices_rsi2.md). EA para
 demo: `demo/RSI2_Indices_D1.mq4`.

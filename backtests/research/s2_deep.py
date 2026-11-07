@@ -38,13 +38,16 @@ def maxdd(x):
     return float((eq - np.maximum.accumulate(np.maximum(eq, 0))).min()) if len(x) else 0.0
 
 
+VARIANT = sys.argv[1] if len(sys.argv) > 1 else "original"
 data = D.universe(D.INDICES)
-p0 = D.P()
+p0 = D.P() if VARIANT == "original" else D.P(exit_mode="rsi", exit_rsi=70.0)
+if VARIANT != "original":
+    OUT = os.path.join(ROOT, "reports", "s2_m1_indices_rsi2.md")
 t = D.run_all(data, "S2", p0)
 t["hold_days"] = (t.exit_time - t.entry_time).dt.days
 dev, ho = t[t.exit_time < D.HOLDOUT], t[t.exit_time >= D.HOLDOUT]
 
-say("# S2: reversion a la media en indices (RSI(2) de Connors)\n")
+say("# S2" + (" con mejora M1 (salida RSI(2) > 70)" if VARIANT != "original" else "") + ": reversion a la media en indices (RSI(2) de Connors)\n")
 say("Reglas fijadas antes de ver resultados en "
     "[`../research/NUEVAS_ESTRATEGIAS.md`](../research/NUEVAS_ESTRATEGIAS.md). Entrada: solo largos si cierre > SMA(200) "
     "y RSI(2) < 10, ejecutando en la apertura del dia siguiente. Salida: cierre > SMA(5). Sin stop. Resultados en R "
@@ -156,4 +159,4 @@ say("\nSupuestos: EMA100 v6 a 0.01 lotes (pips x 0.01 x 7 USD); S2 arriesgando e
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 open(OUT, "w", encoding="utf-8").write("\n".join(md) + "\n")
-t.to_csv(os.path.join(HERE, "logs", "trades_S2.csv"), index=False)
+t.to_csv(os.path.join(HERE, "logs", "trades_S2.csv" if VARIANT == "original" else "trades_S2_M1.csv"), index=False)

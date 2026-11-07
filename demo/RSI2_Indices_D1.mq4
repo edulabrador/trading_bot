@@ -9,7 +9,8 @@
 //| nombre depende del broker: US500, US100, GER40...).              |
 //| Entrada (solo largos), al abrir la vela diaria:                  |
 //|   Close[1] > SMA(200)[1]  y  RSI(2)[1] < 10                      |
-//| Salida, al abrir la vela diaria: Close[1] > SMA(5)[1]            |
+//| Salida (v2, mejora M1), al abrir la vela diaria: RSI(2)[1] > 70  |
+//| (Exit_Mode=0 vuelve a la salida original: Close[1] > SMA(5)[1]). |
 //| Sin stop ni take profit (version clasica). Tamano por riesgo:    |
 //| Risk_Percent del balance por cada ATR(20) diario.                |
 //|                                                                  |
@@ -22,6 +23,8 @@ input double Risk_Percent   = 0.5;   // % del balance por cada ATR(20) diario
 input int    RSI_Period     = 2;
 input double RSI_Entry      = 10.0;  // compra si RSI(2) < este nivel
 input int    SMA_Trend      = 200;
+input int    Exit_Mode      = 1;     // 1 = RSI(2) > RSI_Exit (M1, validada); 0 = Close > SMA(5) (original)
+input double RSI_Exit       = 70.0;
 input int    SMA_Exit       = 5;
 input int    ATR_Period     = 20;
 input double Max_Lots       = 1.0;   // tope de seguridad
@@ -81,7 +84,8 @@ void OnTick()
    int ticket = FindPosition();
    if(ticket > 0)
      {
-      if(close1 > smaE1 && OrderSelect(ticket, SELECT_BY_TICKET))
+      bool exitNow = Exit_Mode == 1 ? rsi1 > RSI_Exit : close1 > smaE1;
+      if(exitNow && OrderSelect(ticket, SELECT_BY_TICKET))
         {
          RefreshRates();
          if(!OrderClose(ticket, OrderLots(), Bid, 30, clrYellow))

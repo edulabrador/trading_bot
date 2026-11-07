@@ -1,5 +1,30 @@
 # Cartera por merito individual (noviembre de 2026)
 
+> **Actualizacion tras las pruebas exigentes** ([`../research/PRUEBAS_EXIGENTES.md`](../research/PRUEBAS_EXIGENTES.md)):
+> S2 pasa a usar la **salida M1 (RSI(2) > 70)**, la unica mejora que gano tanto
+> en desarrollo como en 7 indices nunca vistos. El EMA100 v6 no cambia: el
+> tamano por volatilidad se descarto porque empeoro en el holdout.
+>
+> | Componente | PF desarrollo | PF holdout | Con financiacion/swap | P(perder en 1 anio) |
+> |---|---|---|---|---|
+> | EMA100 v6, GBPJPY H1 (0.01 lotes) | 1.14 | 1.28 | swap a favor (estimado) | 33% |
+> | **S2-M1, S&P 500 + Nasdaq 100 + DAX** (0.5% por ATR) | **2.12** | **2.19** | PF 1.92 (holdout 1.80) | **11%** |
+>
+> Cartera en 10,000 (sin swap ni financiacion): unos 459 al anio (4.6%), con un
+> drawdown mensual de -765 (7.7%) y correlacion mensual de -0.04 entre los dos.
+> Detalle en [`s2_m1_indices_rsi2.md`](s2_m1_indices_rsi2.md).
+>
+> **Puntos debiles conocidos:**
+> - El EMA100 es sensible al retraso de ejecucion: entrando una vela tarde, el
+>   PF baja a 1.08.
+> - S2 es sensible al slippage en la apertura: con 0.1 ATR por lado, el PF baja
+>   a 1.57 con M1.
+> - S2 no tiene stop: sus peores momentos fueron el COVID y febrero de 2018.
+> - Fuera de EE. UU. y del DAX, la ventaja de S2 es menor (PF 1.32 en indices
+>   nuevos frente a 2.1 en los suyos).
+
+
+
 > **Actualizacion:** se anade **S2, la reversion a la media en indices
 > (RSI(2) de Connors)**, la primera estrategia nueva que pasa el protocolo
 > completo. La cartera queda asi:

@@ -35,19 +35,19 @@
     "holdout_desde": "2023-07-10"
   },
   "22001": {
-    "nombre": "S2 RSI(2) S&P 500",
+    "nombre": "S2-M1 RSI(2) S&P 500",
     "backtest": "forward/reference/22001.csv",
     "holdout_desde": "2023-07-10",
     "unidad": "pct"
   },
   "22002": {
-    "nombre": "S2 RSI(2) Nasdaq 100",
+    "nombre": "S2-M1 RSI(2) Nasdaq 100",
     "backtest": "forward/reference/22002.csv",
     "holdout_desde": "2023-07-10",
     "unidad": "pct"
   },
   "22003": {
-    "nombre": "S2 RSI(2) DAX",
+    "nombre": "S2-M1 RSI(2) DAX",
     "backtest": "forward/reference/22003.csv",
     "holdout_desde": "2023-07-10",
     "unidad": "pct"

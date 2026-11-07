@@ -91,3 +91,44 @@ incluir indices de EE. UU. (se solapan con S&P 500 y Nasdaq).
   puntos (en torno al 0.02-0.05% del precio).
 
 Las reglas de generalizacion y de adopcion de la variante no cambian.
+
+## Resultados (7-8 de noviembre de 2026)
+
+Informes: [`../reports/exigentes_ema100.md`](../reports/exigentes_ema100.md),
+[`../reports/exigentes_s2.md`](../reports/exigentes_s2.md),
+[`../reports/s2_validacion_indices_nuevos.md`](../reports/s2_validacion_indices_nuevos.md),
+[`../reports/s2_m1_indices_rsi2.md`](../reports/s2_m1_indices_rsi2.md).
+
+### EMA100 v6: ninguna alarma, pero sensible al retraso
+
+| Prueba | Resultado | Alarma |
+|---|---|---|
+| Zona horaria (GMT+0 a GMT+5) | PF 1.16 a 1.18 en todas; holdout 1.21 a 1.35 | no |
+| Slippage de 1 y 3 pips por lado | PF 1.15 / 1.11 | no |
+| Entrada 1 vela tarde | PF 1.08 (holdout 1.17); con 3 pips mas, 1.03 | no (umbral 1.05), pero es el punto debil |
+| Crisis | Peor ventana: crisis de 2008, -628 pips cerrados y -1,820 de caida flotante. Carry trade de 2024: +293 | no |
+| GBPJPY sintetico (otra fuente) | PF 1.10 frente a 1.08 real en 2007-2023 | no |
+| Tamano por volatilidad | Desarrollo: cociente 1.84 frente a 1.07; holdout: 1.46 frente a 2.40 | **no se adopta** (empeora en holdout) |
+
+### S2: robusta en todo menos en el slippage alto
+
+| Prueba | Resultado | Alarma |
+|---|---|---|
+| Yahoo frente a Dukascopy (2012-2025) | PF 2.34 frente a 2.30 | no |
+| Al cierre / apertura / un dia tarde | PF 1.89 / 1.88 / 1.56 | no |
+| Slippage de 0.1 ATR por lado (unas 10 veces el spread) | PF 1.31 | no, pero se come la mitad del beneficio |
+| Crisis | COVID -13.5 R, feb 2018 -10.8 R, oct-dic 2018 -8.7 R, ago 2011 -8.2 R; 2008: sin trades (el filtro SMA200 la dejo fuera) | dentro del Monte Carlo |
+| Walk-forward | 10/13 anios positivos, eficiencia 1.04 | no |
+| Financiacion del CFD | PF 1.71 (holdout 2.17), 0.048 R por trade | no |
+| 100 entradas aleatorias / 150 combinaciones | Supera al 100% / PF > 1 en 150/150 (desarrollo y holdout) | no |
+
+### Mejoras de S2
+
+- **Seleccion en desarrollo:** M1 (salida RSI(2) > 70) cociente 9.85 frente a 6.94; M3 (filtro de volatilidad) 8.62. M2 (stop) y M4 (cierre por tiempo) empeoran. Se elige **M1** por t-stat.
+- **Validacion en 7 indices nunca vistos (2006-2018):**
+  - S2 original: PF agregado 1.19, positiva en 6/7. Se queda a una centesima del umbral (1.2): **no generaliza** con la regla estricta.
+  - **M1: PF 1.32, t = 2.12, cociente 4.15 frente a 2.22 -> se adopta.**
+- **S2 con M1 en sus mercados:** desarrollo PF 2.12 (t = 4.7); holdout PF 2.19 (91 trades). Con financiacion, PF 1.92 (holdout 1.80). Probabilidad de perder en un anio: 11%.
+
+No se anaden los indices nuevos a la cartera: la regla para anadirlos se
+aplicaba a S2 original, y esta no generalizo.
