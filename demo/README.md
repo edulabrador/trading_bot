@@ -16,6 +16,7 @@ Los EAs originales de la raiz del repo no se han modificado.
 | `EMA100_GBPJPY_H1_v6.mq4` | EMA100 BUY ONLY sin la salida por AO (que no actuaba nunca) | **Candidato principal** | 43898 |
 | `USDJPY_H4_38025241_buyonly.mq4` | USDJPY H4 solo compras | Hipotesis | 38025242 |
 | `R_EURUSD_H1_R2c.mq4` | EURUSD H1 sin salida RVI, SL/TP por ATR diario, tendencia D1 SMA200 | Hipotesis | 31422196 |
+| `RSI2_Indices_D1.mq4` | **S2:** RSI(2) de Connors en indices (solo largos, D1, tamano por riesgo) | **Candidato principal** (estrategia nueva) | 22001 / 22002 / 22003 |
 
 **EMA100 v6 en EURJPY H1:** usa el mismo `EMA100_GBPJPY_H1_v6.mq4` en un grafico
 EURJPY H1 con `Stop_Loss=127`, `Take_Profit=243` y `Magic_Number=43899`. Es el
@@ -34,6 +35,14 @@ compila una copia.
 4. Las sesiones estan pensadas para un broker con hora de servidor GMT+2/GMT+3
    (medianoche = cierre de Nueva York), la mas comun. Si tu broker usa otra
    zona horaria, las horas de sesion de los EAs H1 caen en otro momento.
+
+**S2 (`RSI2_Indices_D1.mq4`):** ponlo en el grafico **D1** de cada indice
+(S&P 500, Nasdaq 100, DAX), con un `Magic_Number` distinto en cada uno. El
+tamano se calcula solo: `Risk_Percent` (0.5 por defecto) es el % del balance
+que supone un movimiento de 1 ATR(20) diario. No tiene stop: el peor trade del
+backtest perdio 8.3 ATR (un 4.2% de la cuenta con 0.5%). En el backtest:
+PF 1.72 en desarrollo y 2.57 en el holdout, 20 trades al anio entre los tres
+indices, 15% de probabilidad de perder en un anio.
 
 ## Que esperar segun el backtest (2006-2026, Dukascopy)
 

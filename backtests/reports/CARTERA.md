@@ -1,5 +1,27 @@
 # Cartera por merito individual (noviembre de 2026)
 
+> **Actualizacion:** se anade **S2, la reversion a la media en indices
+> (RSI(2) de Connors)**, la primera estrategia nueva que pasa el protocolo
+> completo. La cartera queda asi:
+>
+> | Componente | Por que entra | PF holdout | Correlacion con EMA100 |
+> |---|---|---|---|
+> | EMA100 v6, GBPJPY H1 | Paso todas las pruebas; generaliza a otros cruces JPY | 1.28 | - |
+> | **S2 RSI(2), S&P 500 + Nasdaq 100 + DAX (D1)** | Reglas registradas antes de ver datos; pasa las 6 reglas; holdout positivo en los 3 indices | **2.57** (97 trades, t = 3.61) | **0.01** |
+> | EMA100 v6, EURJPY H1 | Solo demo | 1.34 | 0.53 |
+>
+> Con 0.01 lotes en EMA100 y un riesgo del 0.5% por ATR en S2, en una cuenta de
+> 10,000 (backtest, sin swap ni financiacion): EMA100 +25 al anio, S2 +335 al
+> anio, cartera +359 al anio (3.6%), con un drawdown mensual de -1,070 (10.7%).
+> S2 aporta casi todo el rendimiento, y la combinacion apenas aumenta el
+> drawdown frente a S2 sola (-1,039) porque no estan correlacionadas. Detalle en
+> [`s2_indices_rsi2.md`](s2_indices_rsi2.md).
+>
+> Las estrategias S1 (tendencia multi-activo) y S3 (RSI(2) en divisas) no
+> pasaron sus reglas y se descartaron sin mirar su holdout.
+
+
+
 Criterio: un bot solo entra si es rentable **por separado**, con sus mejoras
 fijadas sin optimizar y pasando las pruebas. La cartera no puede depender de
 que unos bots compensen a otros.

@@ -101,3 +101,21 @@ no existe todavia como archivo anual, asi que esos datos llegan a diciembre de
 - **Nasdaq 100, DAX, oro y Brent:** Dukascopy, con el periodo que haya. Los
   instrumentos que empiezan despues de 2007 tienen menos trades en la mitad A.
 - Las reglas de aceptacion no cambian.
+
+## Resultados (7 de noviembre de 2026)
+
+Cada estrategia se ejecuto una sola vez con las reglas de arriba. Registros en
+`logs/nueva_S*.json`.
+
+| Estrategia | Trades (desarrollo) | PF | Mitad A / B | Instrumentos con PF > 1 | Robustez | Azar | Veredicto |
+|---|---|---|---|---|---|---|---|
+| S1 tendencia Turtle | 677 | 1.11 | 1.07 / 1.14 | **5 de 10 (50%)** | 100% | 85% | **No pasa** (regla 4). Holdout no revelado |
+| S2 RSI(2) indices | 276 | **1.72** | 1.79 / 1.70 | 3 de 3 | 100% | 100% | **Pasa** |
+| S3 RSI(2) divisas | 925 | **1.01** | 1.01 / 1.01 | 3 de 5 | 83% | **70%** | **No pasa**. Holdout no revelado |
+
+**Holdout de S2** (desde el 10/07/2023, revelado una vez): 97 trades, **PF 2.57**,
++41.8 R, t = 3.61, positivo en los tres indices (S&P 500 PF 3.29, Nasdaq 100
+2.28, DAX 2.17). Correlacion mensual con el EMA100: **0.01**. Entra en la
+cartera.
+
+Pruebas en profundidad: [`../reports/s2_indices_rsi2.md`](../reports/s2_indices_rsi2.md).

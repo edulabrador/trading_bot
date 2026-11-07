@@ -1,0 +1,104 @@
+{
+  "strategy": "S2",
+  "dev": {
+    "trades": 276,
+    "PF": 1.72,
+    "R": 85.4,
+    "expR": 0.309,
+    "t": 3.22,
+    "maxDD_R": -12.3
+  },
+  "A": {
+    "trades": 60,
+    "PF": 1.793,
+    "R": 20.0,
+    "expR": 0.333,
+    "t": 1.55,
+    "maxDD_R": -9.0
+  },
+  "B": {
+    "trades": 216,
+    "PF": 1.7,
+    "R": 65.4,
+    "expR": 0.303,
+    "t": 2.82,
+    "maxDD_R": -12.3
+  },
+  "per_instrument": {
+    "DAX": {
+      "trades": 76,
+      "PF": 1.17,
+      "R": 7.1,
+      "expR": 0.094,
+      "t": 0.44,
+      "maxDD_R": -9.8
+    },
+    "NAS100": {
+      "trades": 91,
+      "PF": 2.295,
+      "R": 39.1,
+      "expR": 0.429,
+      "t": 3.13,
+      "maxDD_R": -7.1
+    },
+    "SP500": {
+      "trades": 109,
+      "PF": 1.846,
+      "R": 39.2,
+      "expR": 0.359,
+      "t": 2.32,
+      "maxDD_R": -12.3
+    }
+  },
+  "robust": 1.0,
+  "rand_pct": 1.0,
+  "checks": {
+    "trades>=100": true,
+    "PF>=1.10": true,
+    "mitad A>=1": true,
+    "mitad B>=1": true,
+    "60% instrumentos": true,
+    "robustez>=80%": true,
+    "azar>=80%": true
+  },
+  "passed": true,
+  "instruments": [
+    "SP500",
+    "NAS100",
+    "DAX"
+  ],
+  "holdout": {
+    "trades": 97,
+    "PF": 2.571,
+    "R": 41.8,
+    "expR": 0.431,
+    "t": 3.61,
+    "maxDD_R": -6.3
+  },
+  "holdout_per_instrument": {
+    "DAX": {
+      "trades": 27,
+      "PF": 2.17,
+      "R": 9.6,
+      "expR": 0.356,
+      "t": 1.72,
+      "maxDD_R": -2.7
+    },
+    "NAS100": {
+      "trades": 32,
+      "PF": 2.282,
+      "R": 12.6,
+      "expR": 0.394,
+      "t": 1.57,
+      "maxDD_R": -6.3
+    },
+    "SP500": {
+      "trades": 38,
+      "PF": 3.289,
+      "R": 19.6,
+      "expR": 0.516,
+      "t": 3.07,
+      "maxDD_R": -2.6
+    }
+  }
+}

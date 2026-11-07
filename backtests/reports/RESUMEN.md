@@ -28,6 +28,15 @@ para los EAs MQ4): [`mq4_eurusd_h1.md`](mq4_eurusd_h1.md),
 [`mq4_usdjpy_h4.md`](mq4_usdjpy_h4.md), [`mq4_gbpjpy_h4.md`](mq4_gbpjpy_h4.md),
 [`ea_gbpjpy_h1_ema100_v5.md`](ea_gbpjpy_h1_ema100_v5.md).
 
+## Estrategia nueva que pasa: S2 (RSI(2) en indices)
+
+De tres estrategias nuevas registradas antes de ver datos
+([`../research/NUEVAS_ESTRATEGIAS.md`](../research/NUEVAS_ESTRATEGIAS.md)),
+solo **S2** pasa: reversion a la media en S&P 500, Nasdaq 100 y DAX diarios.
+PF 1.72 en desarrollo y **2.57 en el holdout** (97 trades), con correlacion
+0.01 con el EMA100. Informe: [`s2_indices_rsi2.md`](s2_indices_rsi2.md). EA para
+demo: `demo/RSI2_Indices_D1.mq4`.
+
 ## Cartera por merito individual
 
 Ver [`CARTERA.md`](CARTERA.md): con el criterio de que cada bot sea rentable

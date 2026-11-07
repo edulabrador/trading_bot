@@ -16,6 +16,9 @@ Cada bot en su propio grafico de la misma cuenta demo, con su magic number:
 | `demo/R_EURUSD_H1_R2c.mq4` | EURUSD H1 | 31422196 | Hipotesis |
 | `GBPJPY_H4_35839595.mq4` (original) | GBPJPY H4 | 35839595 | Control: el backtest dice que ya no funciona |
 | `demo/EMA100_GBPJPY_H1_v6.mq4` con `Stop_Loss=127`, `Take_Profit=243`, `Magic_Number=43899` | EURJPY H1 | 43899 | Segundo candidato (paso la validacion en otros pares) |
+| `demo/RSI2_Indices_D1.mq4` | S&P 500 D1 (US500 o similar) | 22001 | **S2: candidato principal** (estrategia nueva) |
+| `demo/RSI2_Indices_D1.mq4` | Nasdaq 100 D1 (US100) | 22002 | S2 |
+| `demo/RSI2_Indices_D1.mq4` | DAX D1 (GER40) | 22003 | S2 |
 
 Si la validacion en otros pares (`backtests/research/RESULTADOS.md`) aprueba
 algun bot en pares nuevos, anadelo tambien en esos pares. Para eso hay que
@@ -59,11 +62,15 @@ Estas reglas estan en el codigo (`MIN_TRADES`, `ALERT_PCT`, `PROMOTE_PCT`,
 | USDJPY solo compras | ~15 | ~16 meses |
 | EURUSD R2c | ~5 | ~4 anios |
 | GBPJPY H4 original | ~50 | ~5 meses |
+| S2 RSI(2) (por indice) | ~7 (unos 20 entre los tres) | ~3 anios por indice; ~1 anio los tres juntos |
 
 Con tan pocos trades, incluso 12 meses de forward dan una senal debil. El
 forward sirve sobre todo para detectar pronto un bot que se porta peor de lo
 esperado (la regla de alerta) y para medir costes reales. Que salga bien un
 anio no demuestra que el bot tenga ventaja.
+
+Para los indices (S2), `check_forward.py` compara el **% de variacion por
+trade** en lugar de pips (`"unidad": "pct"` en `bots.json`).
 
 ## Que mas mirar
 
