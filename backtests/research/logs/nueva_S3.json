@@ -1,0 +1,88 @@
+{
+  "strategy": "S3",
+  "dev": {
+    "trades": 925,
+    "PF": 1.01,
+    "R": 4.4,
+    "expR": 0.005,
+    "t": 0.11,
+    "maxDD_R": -40.9
+  },
+  "A": {
+    "trades": 454,
+    "PF": 1.008,
+    "R": 1.7,
+    "expR": 0.004,
+    "t": 0.06,
+    "maxDD_R": -29.4
+  },
+  "B": {
+    "trades": 471,
+    "PF": 1.013,
+    "R": 2.7,
+    "expR": 0.006,
+    "t": 0.1,
+    "maxDD_R": -21.9
+  },
+  "per_instrument": {
+    "AUDUSD": {
+      "trades": 172,
+      "PF": 1.376,
+      "R": 25.7,
+      "expR": 0.149,
+      "t": 1.49,
+      "maxDD_R": -10.1
+    },
+    "EURUSD": {
+      "trades": 179,
+      "PF": 0.777,
+      "R": -23.0,
+      "expR": -0.128,
+      "t": -1.12,
+      "maxDD_R": -34.1
+    },
+    "GBPUSD": {
+      "trades": 210,
+      "PF": 1.063,
+      "R": 5.5,
+      "expR": 0.026,
+      "t": 0.29,
+      "maxDD_R": -21.2
+    },
+    "USDCAD": {
+      "trades": 188,
+      "PF": 1.376,
+      "R": 25.7,
+      "expR": 0.137,
+      "t": 1.71,
+      "maxDD_R": -5.9
+    },
+    "USDCHF": {
+      "trades": 176,
+      "PF": 0.682,
+      "R": -29.5,
+      "expR": -0.168,
+      "t": -1.78,
+      "maxDD_R": -40.9
+    }
+  },
+  "robust": 0.8333333333333334,
+  "rand_pct": 0.7,
+  "checks": {
+    "trades>=100": true,
+    "PF>=1.10": false,
+    "mitad A>=1": true,
+    "mitad B>=1": true,
+    "60% instrumentos": true,
+    "robustez>=80%": true,
+    "azar>=80%": false
+  },
+  "passed": false,
+  "instruments": [
+    "EURUSD",
+    "GBPUSD",
+    "AUDUSD",
+    "USDCAD",
+    "USDCHF"
+  ]
+}
