@@ -1,2 +1,7 @@
 mq4_eurusd_h1,r2c,3/5,0.96,-0.34,381,NO
 mq4_eurusd_h1,baseline,1/5,0.91,-1.59,2981,NO
+ema100_gbpjpy_h1,v6_no_ao_exit,3/3,1.08,1.29,1305,SI
+mq4_usdjpy_h4,baseline,1/3,1.02,0.29,1391,NO
+mq4_usdjpy_h4,buy_only,2/3,1.04,0.39,689,NO
+mq4_gbpjpy_h4,baseline,3/3,1.08,1.41,2786,SI
+mq4_gbpjpy_h4,buy_only,3/3,1.09,1.05,1347,SI

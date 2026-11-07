@@ -75,7 +75,15 @@ def get_presets() -> dict:
             "v6_no_ao_exit": replace(b, name="v6_no_ao_exit", exit_mode="none"),
             "baseline_fixed_spread": replace(b, name="baseline_fixed_spread", use_bar_spread=False),
             "both_dirs": replace(b, name="both_dirs", direction_mode="both"),
-            "commission": replace(b, name="commission", commission_per_lot_per_side=3.5)}
+            "commission": replace(b, name="commission", commission_per_lot_per_side=3.5),
+            # Validacion en otros pares (research/PROTOCOLO.md): mismas reglas, SL/TP escalados por
+            # ATR D1 relativo a GBPJPY (2007 a jul 2023) y spread fijo conservador.
+            "v6_eurjpy": replace(b, name="v6_eurjpy", exit_mode="none", stop_loss_pips=127, take_profit_pips=243,
+                                 use_bar_spread=False, spread_pips=2.0),
+            "v6_audjpy": replace(b, name="v6_audjpy", exit_mode="none", stop_loss_pips=101, take_profit_pips=193,
+                                 use_bar_spread=False, spread_pips=2.0),
+            "v6_cadjpy": replace(b, name="v6_cadjpy", exit_mode="none", stop_loss_pips=96, take_profit_pips=183,
+                                 use_bar_spread=False, spread_pips=2.5)}
 
 
 def backtest(h1, cfg: Config = None, ltf=None):

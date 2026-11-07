@@ -28,6 +28,12 @@ para los EAs MQ4): [`mq4_eurusd_h1.md`](mq4_eurusd_h1.md),
 [`mq4_usdjpy_h4.md`](mq4_usdjpy_h4.md), [`mq4_gbpjpy_h4.md`](mq4_gbpjpy_h4.md),
 [`ea_gbpjpy_h1_ema100_v5.md`](ea_gbpjpy_h1_ema100_v5.md).
 
+## Cartera por merito individual
+
+Ver [`CARTERA.md`](CARTERA.md): con el criterio de que cada bot sea rentable
+por separado, la cartera queda en **EMA100 v6 en GBPJPY H1** (candidato para
+real tras la demo) y **EMA100 v6 en EURJPY H1** (en demo). Ningun otro bot pasa.
+
 ## Candidatos para demo (noviembre de 2026)
 
 En [`../../demo/`](../../demo/) hay tres `.mq4` listos para compilar: EMA100 v6

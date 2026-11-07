@@ -161,3 +161,42 @@ EMA100. Es la comparacion mas justa.
   suma de los individuales (-710), y solo 2 de 21 anios son negativos. Pero en
   el holdout la cartera gana +164, de los que +154 son del EMA100. La
   diversificacion reduce el riesgo, no crea ventaja.
+
+## Validacion en otros mercados (sin cambiar reglas)
+
+Reglas fijadas antes en [`PROTOCOLO.md`](PROTOCOLO.md). Registro completo en
+`logs/cross_market.csv`. Los cruces JPY son sinteticos (EURJPY = EURUSD x
+USDJPY hasta octubre de 2026; AUDJPY y CADJPY hasta marzo de 2023). Los pares
+USD son datos Dukascopy de 2007 a marzo de 2023.
+
+| Bot | Pares nuevos con PF > 1 | PF agregado | Generaliza |
+|---|---|---|---|
+| EMA100 v6 | 3/3 (EURJPY 1.10, AUDJPY 1.09, CADJPY 1.04) | 1.08 | **si** |
+| USDJPY H4 original | 1/3 | 1.02 | no |
+| USDJPY H4 solo compras | 2/3 | 1.04 | no |
+| GBPJPY H4 original | 3/3 | 1.08 | si (historico) |
+| GBPJPY H4 solo compras | 3/3 | 1.09 | si (historico) |
+| EURUSD H1 original | 1/5 | 0.91 | no |
+| EURUSD H1 R2c | 3/5 | 0.96 | no |
+
+En EURJPY, el unico par nuevo con datos hasta 2026, el periodo desde el
+10/07/2023 confirma la diferencia:
+
+| Bot en EURJPY | Hasta 09/07/2023 | Desde 10/07/2023 |
+|---|---|---|
+| EMA100 v6 | 418 trades, PF 1.06 | **86 trades, PF 1.34, +2,221 pips** |
+| GBPJPY H4 original | 800 trades, PF 1.09 | 125 trades, PF 0.80, -1,036 |
+| GBPJPY H4 solo compras | 367 trades, PF 1.12 | 63 trades, PF 0.67, -918 |
+
+EMA100 v6 en los tres pares nuevos, con la bateria completa (informes
+`ema100_v6_eurjpy.md`, `ema100_v6_audjpy.md`, `ema100_v6_cadjpy.md`):
+
+| | EURJPY | AUDJPY | CADJPY |
+|---|---|---|---|
+| PF total | 1.10 | 1.09 | 1.04 |
+| Supera al azar (percentil) | 82 | 60 | 33 |
+| Parametros +-20% con PF > 1 | 142/150 | 143/150 | 132/150 |
+| Walk-forward (anios positivos, eficiencia) | 10/16, 0.44 | 6/13, -0.19 | 4/13, -0.24 |
+| P(perder en 1 anio) | 45% | 40% | 45% |
+
+Conclusion en [`../reports/CARTERA.md`](../reports/CARTERA.md).

@@ -15,6 +15,7 @@ Cada bot en su propio grafico de la misma cuenta demo, con su magic number:
 | `demo/USDJPY_H4_38025241_buyonly.mq4` | USDJPY H4 | 38025242 | Hipotesis |
 | `demo/R_EURUSD_H1_R2c.mq4` | EURUSD H1 | 31422196 | Hipotesis |
 | `GBPJPY_H4_35839595.mq4` (original) | GBPJPY H4 | 35839595 | Control: el backtest dice que ya no funciona |
+| `demo/EMA100_GBPJPY_H1_v6.mq4` con `Stop_Loss=127`, `Take_Profit=243`, `Magic_Number=43899` | EURJPY H1 | 43899 | Segundo candidato (paso la validacion en otros pares) |
 
 Si la validacion en otros pares (`backtests/research/RESULTADOS.md`) aprueba
 algun bot en pares nuevos, anadelo tambien en esos pares. Para eso hay que
@@ -54,7 +55,7 @@ Estas reglas estan en el codigo (`MIN_TRADES`, `ALERT_PCT`, `PROMOTE_PCT`,
 
 | Bot | Trades al anio | 20 trades en |
 |---|---|---|
-| EMA100 v6 | ~25 | ~10 meses |
+| EMA100 v6 (GBPJPY y EURJPY) | ~25 cada uno | ~10 meses |
 | USDJPY solo compras | ~15 | ~16 meses |
 | EURUSD R2c | ~5 | ~4 anios |
 | GBPJPY H4 original | ~50 | ~5 meses |

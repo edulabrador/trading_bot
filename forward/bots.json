@@ -28,5 +28,10 @@
     "nombre": "EURUSD H1 original",
     "backtest": "forward/reference/31422195.csv",
     "holdout_desde": "2023-07-10"
+  },
+  "43899": {
+    "nombre": "EMA100 v6 en EURJPY H1",
+    "backtest": "forward/reference/43899.csv",
+    "holdout_desde": "2023-07-10"
   }
 }

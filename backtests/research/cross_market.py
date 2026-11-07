@@ -34,7 +34,8 @@ DEV_END = pd.Timestamp("2023-07-10")
 
 
 def find_csv(sym):
-    for name in (f"{sym}_H1.csv", f"{sym}_H1_2007_2023.csv"):
+    # preferencia: datos reales completos; si no, 2007-2023; si no, cruce sintetico (ver RESULTADOS.md)
+    for name in (f"{sym}_H1.csv", f"{sym}_H1_2007_2023.csv", f"{sym}_H1_syn.csv"):
         p = os.path.join(ROOT, "data", name)
         if os.path.exists(p):
             return p
@@ -91,7 +92,8 @@ def main():
         # normalizar a "unidades de SL original" para poder agregar pares de distinta volatilidad
         pooled.append(p / ratio)
         s = stats(p)
-        rows.append({"par": sym, "datos": f"{h1.index[0]:%Y-%m} a {h1.index[-1]:%Y-%m}", "ATR ratio": round(ratio, 2),
+        rows.append({"par": sym + (" (sint.)" if find_csv(sym).endswith("_syn.csv") else ""),
+                     "datos": f"{h1.index[0]:%Y-%m} a {h1.index[-1]:%Y-%m}", "ATR ratio": round(ratio, 2),
                      "SL/TP": "ATR" if atr_mode else f"{cfg.stop_loss_pips:.0f}/{cfg.take_profit_pips:.0f}", **s})
         print(rows[-1], flush=True)
     res = pd.DataFrame(rows)

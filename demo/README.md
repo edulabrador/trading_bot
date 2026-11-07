@@ -17,6 +17,13 @@ Los EAs originales de la raiz del repo no se han modificado.
 | `USDJPY_H4_38025241_buyonly.mq4` | USDJPY H4 solo compras | Hipotesis | 38025242 |
 | `R_EURUSD_H1_R2c.mq4` | EURUSD H1 sin salida RVI, SL/TP por ATR diario, tendencia D1 SMA200 | Hipotesis | 31422196 |
 
+**EMA100 v6 en EURJPY H1:** usa el mismo `EMA100_GBPJPY_H1_v6.mq4` en un grafico
+EURJPY H1 con `Stop_Loss=127`, `Take_Profit=243` y `Magic_Number=43899`. Es el
+SL/TP escalado por volatilidad. Paso la validacion en otros pares (ver
+`backtests/reports/CARTERA.md`). El magic es `static input`, asi que si tu
+terminal no deja cambiarlo en los parametros, edita la linea en el codigo y
+compila una copia.
+
 ## Uso
 
 1. Copia el `.mq4` a `MQL4/Experts` de tu terminal y compilalo en MetaEditor.
