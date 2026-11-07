@@ -128,7 +128,7 @@ def main() -> None:
     ap.add_argument("--csv", required=True, help="CSV H1 (p.ej. generado por dukascopy.py)")
     ap.add_argument("--preset", default="baseline")
     ap.add_argument("--split", default=None, help="fecha de corte IS/OOS (YYYY-MM-DD)")
-    ap.add_argument("--params", default=",".join(DEFAULT_PARAMS), help="parametros de Config a perturbar")
+    ap.add_argument("--params", default=None, help="parametros de Config a perturbar (por defecto SENS_PARAMS del bot)")
     ap.add_argument("--wf-train-years", type=int, default=4)
     ap.add_argument("--swap-gbpjpy", action="store_true", help="estima el swap de GBPJPY con tipos BoE/BoJ")
     ap.add_argument("--quick", action="store_true")
@@ -148,7 +148,8 @@ def main() -> None:
     n_rand = 20 if a.quick else 60
     n_joint = 40 if a.quick else 150
     fnames = {f.name for f in fields(cfg0)}
-    params = [p for p in a.params.split(",") if p in fnames]
+    plist = a.params.split(",") if a.params else getattr(ea, "SENS_PARAMS", DEFAULT_PARAMS)
+    params = [p for p in plist if p in fnames]
 
     md: list[str] = []
 
@@ -209,12 +210,16 @@ def main() -> None:
     say("\nPor anio (pips): " + ", ".join(f"{k}: {v}" for k, v in y.pips.items()))
     say(f"\nAnios negativos: {(y.pips < 0).sum()} de {len(y)}")
     # chequeos de modelo
-    if "awesome_oscillator" in ea.compute_indicators(h1, cfg0).columns and hasattr(cfg0, "ao_level"):
+    if hasattr(ea, "compute_indicators") and hasattr(cfg0, "ao_level") and "awesome_oscillator" in ea.compute_indicators(h1, cfg0).columns:
         ao = ea.compute_indicators(h1, cfg0)["awesome_oscillator"]
         say(f"\nChequeo salida AO: el AO supera ao_level={cfg0.ao_level} en el {100 * (ao > cfg0.ao_level).mean():.2f}% "
             f"de las velas (p99 = {ao.quantile(.99):.2f}). Si es ~0%, la salida por senal no actua.")
-    amb = sum(int(((h1.loc[r.entry_time:r.exit_time].low <= r.stop_loss) &
-                   (h1.loc[r.entry_time:r.exit_time].high >= r.take_profit)).any()) for _, r in t.iterrows())
+    def _both_hit(r):
+        seg = h1.loc[r.entry_time:r.exit_time]
+        if r.direction == "BUY":
+            return bool(((seg.low <= r.stop_loss) & (seg.high >= r.take_profit)).any())
+        return bool(((seg.high >= r.stop_loss) & (seg.low <= r.take_profit)).any())  # SELL: SL arriba, TP abajo
+    amb = sum(_both_hit(r) for _, r in t.iterrows())
     say(f"\nTrades con SL y TP tocados en la misma vela H1: {amb} (si es >0, conviene usar datos M1/M15 con --ltf-csv)")
 
     # 2. costes -----------------------------------------------------------------------------
@@ -238,12 +243,25 @@ def main() -> None:
 
     # 3. benchmark aleatorio ----------------------------------------------------------------
     say("\n## 3. Benchmark: entradas aleatorias con las mismas reglas\n")
-    if hasattr(ea, "entry_signal"):
-        orig = ea.entry_signal
+    if hasattr(ea, "set_entry_override") or hasattr(ea, "entry_signal"):
         target = len(t)
 
         def rand_run(prob, seed):
             r = np.random.default_rng(seed)
+            if hasattr(ea, "set_entry_override"):
+                # motor generico (engine.py): sustituye la senal de entrada; sesion, SL/TP y salidas se mantienen
+                def override(i, long_ok, short_ok):
+                    if r.random() >= prob:
+                        return False, False
+                    go_long = r.random() < 0.5 if cfg0.direction_mode == "both" else cfg0.direction_mode == "buy_only"
+                    return go_long, not go_long
+                ea.set_entry_override(override)
+                try:
+                    tt, _, _ = run(cfg0)
+                finally:
+                    ea.set_entry_override(None)
+                return tt
+            orig = ea.entry_signal
 
             def fake(fi_1, fi_2, close_1, ema_1, cfg):
                 if r.random() >= prob:
@@ -376,7 +394,7 @@ def main() -> None:
 
     # 7. walk-forward -----------------------------------------------------------------------
     say("\n## 7. Walk-forward\n")
-    wf_keys = [k for k in ("fi_period", "stop_loss_pips", "take_profit_pips") if k in fnames]
+    wf_keys = [k for k in getattr(ea, "WF_PARAMS", ("fi_period", "stop_loss_pips", "take_profit_pips")) if k in fnames]
     if wf_keys:
         levels = [(0.75, 1.0, 1.3)] * len(wf_keys)
         combos = [dict(zip(wf_keys, c)) for c in np.array(np.meshgrid(*levels)).T.reshape(-1, len(wf_keys))]

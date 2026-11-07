@@ -8,11 +8,15 @@ del bot es real o es un artefacto del periodo en el que se optimizo?**
 backtests/
   dukascopy.py                  descarga velas H1 BID/ASK de Dukascopy -> CSV
   run_tests.py                  bateria de pruebas (8 bloques) -> report.md
+  engine.py                     motor generico estilo MT4/EA Studio + indicadores MT4
   bots/
     ea_gbpjpy_h1_ema100_v5.py   backtester v5 del EA GBPJPY H1 EMA100 BUY ONLY
+    mq4_eurusd_h1.py            R_EURUSD_H1.mq4
+    mq4_usdjpy_h4.py            USDJPY_H4_38025241.mq4
+    mq4_gbpjpy_h4.py            GBPJPY_H4_35839595.mq4
   reports/
     RESUMEN.md                  conclusiones de los 4 bots evaluados
-    ea_gbpjpy_h1_ema100_v5.md   informe completo generado por run_tests.py
+    <bot>.md                    informe completo de cada bot generado por run_tests.py
   data/                         CSV y cache de descargas (no se versiona)
 ```
 
@@ -90,7 +94,28 @@ Genera `report.md`, `trades_base.csv`, `anual.csv` y `sensibilidad.csv`.
 
 ## Probar un bot nuevo
 
-`run_tests.py` funciona con cualquier modulo que exponga la misma interfaz que
+La forma mas sencilla es usar `engine.py`, como hacen los tres `bots/mq4_*.py`:
+
+1. Copia uno de ellos (por ejemplo `bots/mq4_gbpjpy_h4.py`).
+2. Define en `Config` los parametros del EA: SL/TP, lotes, timeframe (`H1` o
+   `H4`, que se construye desde el CSV H1), sesion, pip y spread por defecto.
+3. Escribe `signals(bars, cfg)`, que devuelve cuatro columnas booleanas
+   (`long_entry`, `short_entry`, `exit_long`, `exit_short`) evaluadas en la
+   apertura de cada vela usando solo velas cerradas. Es la traduccion directa
+   de `ManageOpen` y `ManageClose` del MQ4. `engine.py` trae los indicadores de
+   MT4 mas comunes (WPR, Stochastic, Alligator, RVI, ADX +DI/-DI, A/D,
+   Envelopes, Bulls Power, SMA/EMA/SMMA).
+4. Opcional: `SENS_PARAMS` y `WF_PARAMS`, los parametros que `run_tests.py`
+   perturbara en la prueba de robustez y reoptimizara en el walk-forward.
+
+Ejemplo con los EAs del repo (corte = fecha en la que se subieron, 10/07/2023):
+
+```bash
+python backtests/run_tests.py --bot backtests/bots/mq4_gbpjpy_h4.py \
+  --csv backtests/data/GBPJPY_H1.csv --split 2023-07-10
+```
+
+Tambien funciona con cualquier modulo que exponga la misma interfaz que
 `bots/ea_gbpjpy_h1_ema100_v5.py`:
 
 - `Config` (dataclass con `pip`, `point`, `stop_loss_pips`, `take_profit_pips`,
@@ -103,8 +128,8 @@ Genera `report.md`, `trades_base.csv`, `anual.csv` y `sensibilidad.csv`.
 - opcional: `entry_signal(...)` y `Direction`, para el benchmark aleatorio, y
   `count_swap_nights` para el swap
 
-La forma mas rapida es copiar el v5 y cambiar `compute_indicators`,
-`entry_signal` y `exit_signal`.
+(en ese caso el benchmark aleatorio sustituye `entry_signal`; con `engine.py`
+usa `set_entry_override`).
 
 ## Limites
 
