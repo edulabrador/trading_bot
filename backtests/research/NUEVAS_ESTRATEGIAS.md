@@ -84,3 +84,20 @@ Con los trades de todo su universo juntos, en R, y solo con datos de desarrollo:
 Si pasa, se revela el **holdout una sola vez**. Entra en la cartera solo si en
 el holdout el PF agregado es > 1 **y** su correlacion mensual con el EMA100 es
 menor de 0.3.
+
+## Enmienda de datos (antes de ejecutar S1 y S2)
+
+Escrita despues de la descarga y **antes** de correr S1 y S2. S3 ya se habia
+ejecutado (no paso) y no le afecta.
+
+En Dukascopy, el historico diario de indices empieza tarde: S&P 500 y Nasdaq
+100 en 2011, DAX en septiembre de 2013 y Brent a finales de 2010. El ano 2026
+no existe todavia como archivo anual, asi que esos datos llegan a diciembre de
+2025. Cambios:
+
+- **S&P 500:** se usa el indice cash diario de Yahoo (^GSPC), publicado en
+  GitHub (`CodeBeckZero/MADDQN` hasta 2019 y `george962/FearGreedIndex` desde
+  noviembre de 2019; coinciden en el solape). Cubre de 2007 a octubre de 2026.
+- **Nasdaq 100, DAX, oro y Brent:** Dukascopy, con el periodo que haya. Los
+  instrumentos que empiezan despues de 2007 tienen menos trades en la mitad A.
+- Las reglas de aceptacion no cambian.

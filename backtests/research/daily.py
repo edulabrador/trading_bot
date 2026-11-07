@@ -28,6 +28,8 @@ HALF = pd.Timestamp("2015-01-01")
 START = pd.Timestamp("2007-01-01")
 TOH = "/home/user/data_src/tohaitrieu_market-history/data"
 DUKA_D1 = "/home/user/duka/d1"
+# S&P 500 cash diario (Yahoo, via GitHub): Dukascopy solo lo tiene desde 2011 (ver NUEVAS_ESTRATEGIAS.md)
+SP500_YAHOO = os.path.join(os.path.dirname(HERE), "data", "SP500_D1_yahoo.csv")
 
 # spread completo por operacion, en unidades de precio (NUEVAS_ESTRATEGIAS.md)
 SPREAD = {"EURUSD": 0.00010, "GBPUSD": 0.00015, "AUDUSD": 0.00012, "USDCAD": 0.00018, "USDCHF": 0.00018,
@@ -77,6 +79,9 @@ def universe(names):
     for n in names:
         if n in FX:
             out[n] = load_toh(n)
+        elif n == "SP500" and os.path.exists(SP500_YAHOO):
+            d = pd.read_csv(SP500_YAHOO, parse_dates=["time"]).set_index("time")[["open", "high", "low", "close"]]
+            out[n] = d
         elif n in DUKA_SYMS:
             d = load_duka_d1(DUKA_SYMS[n])
             if d is None and n == "XAUUSD":
