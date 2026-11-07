@@ -11,12 +11,18 @@ backtests/
   engine.py                     motor generico estilo MT4/EA Studio + indicadores MT4
   bots/
     ea_gbpjpy_h1_ema100_v5.py   backtester v5 del EA GBPJPY H1 EMA100 BUY ONLY
+    ea_gbpjpy_h1_ema100_v6.py   v6: igual que v5 sin la salida AO (que no actuaba)
+    ema100_gbpjpy_h1.py         el mismo EA sobre engine.py (paridad exacta con v5)
     mq4_eurusd_h1.py            R_EURUSD_H1.mq4
     mq4_usdjpy_h4.py            USDJPY_H4_38025241.mq4
     mq4_gbpjpy_h4.py            GBPJPY_H4_35839595.mq4
   reports/
     RESUMEN.md                  conclusiones de los 4 bots evaluados
     <bot>.md                    informe completo de cada bot generado por run_tests.py
+  research/
+    PROTOCOLO.md                reglas para mejorar bots sin sobreoptimizar
+    iterate.py                  prueba variantes en desarrollo y revela el holdout una vez
+    RESULTADOS.md               resultados de la busqueda de mejoras
   data/                         CSV y cache de descargas (no se versiona)
 ```
 

@@ -12,11 +12,29 @@ ajustar el bot.
 | `GBPJPY_H4_35839595.mq4` | 2007 a feb 2026 | 993 | 1.24 | 0.92 desde jul 2023 | **No rentable hoy** |
 | EA GBPJPY H1 EMA100 BUY ONLY v5 | 2006 a oct 2026 | 530 | 1.16 | 1.23 desde jul 2022 | **Ventaja fina y riesgo alto** |
 
+## Busqueda de mejoras (noviembre de 2026)
+
+Se probaron 25 variantes con un protocolo cerrado: reglas fijadas de antemano,
+datos de desarrollo hasta julio de 2023 y holdout reservado desde entonces.
+Detalle en [`../research/RESULTADOS.md`](../research/RESULTADOS.md).
+
+**Ninguna mejora se sostuvo de forma convincente en el holdout.** El EMA100
+original (v6, sin la salida AO, con resultados identicos) sigue siendo el unico
+candidato. GBPJPY H4 y EURUSD H1 no son rescatables con estas reglas. USDJPY H4
+"solo largos" gano 77 pips en 33 trades en el holdout, que no es suficiente.
+
+Informes completos generados con `run_tests.py` (holdout desde el 10/07/2023
+para los EAs MQ4): [`mq4_eurusd_h1.md`](mq4_eurusd_h1.md),
+[`mq4_usdjpy_h4.md`](mq4_usdjpy_h4.md), [`mq4_gbpjpy_h4.md`](mq4_gbpjpy_h4.md),
+[`ea_gbpjpy_h1_ema100_v5.md`](ea_gbpjpy_h1_ema100_v5.md).
+
 ## Los tres EAs MQ4 del repo
 
-Probados con una traduccion a Python de cada `.mq4`, con datos H1 de Dukascopy
+Primer analisis: traduccion a Python de cada `.mq4`, con datos H1 de Dukascopy
 (2007 a 2023) y H4 de `tohaitrieu/market-history` (hasta febrero de 2026).
-Esa traduccion no esta en este repo. Como prueba OOS se uso el periodo
+Ahora estan en `bots/mq4_*.py` y se evaluan con `run_tests.py` sobre datos de
+Dukascopy hasta octubre de 2026: EURUSD PF 0.90 (holdout 0.78), USDJPY PF 1.08
+(holdout 0.84), GBPJPY PF 1.15 (holdout 0.85). Como prueba OOS se uso el periodo
 posterior a su publicacion (10 de julio de 2023).
 
 - **EURUSD H1**: PF 0.94. Sin costes queda en PF 1.00 exacto. 33 de 36
