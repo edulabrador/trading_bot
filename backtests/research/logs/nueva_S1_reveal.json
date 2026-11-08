@@ -1,0 +1,133 @@
+{
+  "strategy": "S1",
+  "dev": {
+    "trades": 677,
+    "PF": 1.112,
+    "R": 95.9,
+    "expR": 0.142,
+    "t": 0.79,
+    "maxDD_R": -94.7
+  },
+  "A": {
+    "trades": 280,
+    "PF": 1.074,
+    "R": 26.4,
+    "expR": 0.094,
+    "t": 0.38,
+    "maxDD_R": -61.6
+  },
+  "B": {
+    "trades": 397,
+    "PF": 1.139,
+    "R": 69.5,
+    "expR": 0.175,
+    "t": 0.7,
+    "maxDD_R": -74.5
+  },
+  "per_instrument": {
+    "AUDUSD": {
+      "trades": 79,
+      "PF": 1.144,
+      "R": 14.5,
+      "expR": 0.184,
+      "t": 0.32,
+      "maxDD_R": -27.4
+    },
+    "BRENT": {
+      "trades": 49,
+      "PF": 1.912,
+      "R": 57.3,
+      "expR": 1.17,
+      "t": 1.11,
+      "maxDD_R": -22.5
+    },
+    "DAX": {
+      "trades": 45,
+      "PF": 0.854,
+      "R": -8.1,
+      "expR": -0.181,
+      "t": -0.37,
+      "maxDD_R": -16.1
+    },
+    "EURUSD": {
+      "trades": 71,
+      "PF": 1.417,
+      "R": 40.0,
+      "expR": 0.563,
+      "t": 0.67,
+      "maxDD_R": -33.4
+    },
+    "GBPUSD": {
+      "trades": 83,
+      "PF": 0.809,
+      "R": -21.9,
+      "expR": -0.264,
+      "t": -0.64,
+      "maxDD_R": -33.9
+    },
+    "NAS100": {
+      "trades": 49,
+      "PF": 1.0,
+      "R": 0.0,
+      "expR": 0.001,
+      "t": 0.0,
+      "maxDD_R": -17.6
+    },
+    "SP500": {
+      "trades": 74,
+      "PF": 1.088,
+      "R": 6.9,
+      "expR": 0.093,
+      "t": 0.28,
+      "maxDD_R": -24.9
+    },
+    "USDCAD": {
+      "trades": 75,
+      "PF": 0.947,
+      "R": -5.3,
+      "expR": -0.07,
+      "t": -0.16,
+      "maxDD_R": -38.7
+    },
+    "USDCHF": {
+      "trades": 75,
+      "PF": 0.546,
+      "R": -43.7,
+      "expR": -0.583,
+      "t": -2.12,
+      "maxDD_R": -57.6
+    },
+    "XAUUSD": {
+      "trades": 77,
+      "PF": 1.591,
+      "R": 56.2,
+      "expR": 0.73,
+      "t": 1.22,
+      "maxDD_R": -15.5
+    }
+  },
+  "robust": 1.0,
+  "rand_pct": 0.85,
+  "checks": {
+    "trades>=100": true,
+    "PF>=1.10": true,
+    "mitad A>=1": true,
+    "mitad B>=1": true,
+    "60% instrumentos": false,
+    "robustez>=80%": true,
+    "azar>=80%": true
+  },
+  "passed": false,
+  "instruments": [
+    "EURUSD",
+    "GBPUSD",
+    "AUDUSD",
+    "USDCAD",
+    "USDCHF",
+    "XAUUSD",
+    "SP500",
+    "NAS100",
+    "DAX",
+    "BRENT"
+  ]
+}

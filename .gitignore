@@ -1,0 +1,7 @@
+# Datos descargados (no se versionan)
+backtests/data/*.csv
+backtests/data/indices_yahoo/
+backtests/data/raw/
+backtests/out/
+__pycache__/
+*.pyc

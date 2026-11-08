@@ -1,0 +1,110 @@
+# Cartera por merito individual (noviembre de 2026)
+
+> **Actualizacion tras las pruebas exigentes** ([`../research/PRUEBAS_EXIGENTES.md`](../research/PRUEBAS_EXIGENTES.md)):
+> S2 pasa a usar la **salida M1 (RSI(2) > 70)**, la unica mejora que gano tanto
+> en desarrollo como en 7 indices nunca vistos. El EMA100 v6 no cambia: el
+> tamano por volatilidad se descarto porque empeoro en el holdout.
+>
+> | Componente | PF desarrollo | PF holdout | Con financiacion/swap | P(perder en 1 anio) |
+> |---|---|---|---|---|
+> | EMA100 v6, GBPJPY H1 (0.01 lotes) | 1.14 | 1.28 | swap a favor (estimado) | 33% |
+> | **S2-M1, S&P 500 + Nasdaq 100 + DAX** (0.5% por ATR) | **2.12** | **2.19** | PF 1.92 (holdout 1.80) | **11%** |
+>
+> Cartera en 10,000 (sin swap ni financiacion): unos 459 al anio (4.6%), con un
+> drawdown mensual de -765 (7.7%) y correlacion mensual de -0.04 entre los dos.
+> Detalle en [`s2_m1_indices_rsi2.md`](s2_m1_indices_rsi2.md).
+>
+> **Puntos debiles conocidos:**
+> - El EMA100 es sensible al retraso de ejecucion: entrando una vela tarde, el
+>   PF baja a 1.08.
+> - S2 es sensible al slippage en la apertura: con 0.1 ATR por lado, el PF baja
+>   a 1.57 con M1.
+> - S2 no tiene stop: sus peores momentos fueron el COVID y febrero de 2018.
+> - Fuera de EE. UU. y del DAX, la ventaja de S2 es menor (PF 1.32 en indices
+>   nuevos frente a 2.1 en los suyos).
+
+
+
+> **Actualizacion:** se anade **S2, la reversion a la media en indices
+> (RSI(2) de Connors)**, la primera estrategia nueva que pasa el protocolo
+> completo. La cartera queda asi:
+>
+> | Componente | Por que entra | PF holdout | Correlacion con EMA100 |
+> |---|---|---|---|
+> | EMA100 v6, GBPJPY H1 | Paso todas las pruebas; generaliza a otros cruces JPY | 1.28 | - |
+> | **S2 RSI(2), S&P 500 + Nasdaq 100 + DAX (D1)** | Reglas registradas antes de ver datos; pasa las 6 reglas; holdout positivo en los 3 indices | **2.57** (97 trades, t = 3.61) | **0.01** |
+> | EMA100 v6, EURJPY H1 | Solo demo | 1.34 | 0.53 |
+>
+> Con 0.01 lotes en EMA100 y un riesgo del 0.5% por ATR en S2, en una cuenta de
+> 10,000 (backtest, sin swap ni financiacion): EMA100 +25 al anio, S2 +335 al
+> anio, cartera +359 al anio (3.6%), con un drawdown mensual de -1,070 (10.7%).
+> S2 aporta casi todo el rendimiento, y la combinacion apenas aumenta el
+> drawdown frente a S2 sola (-1,039) porque no estan correlacionadas. Detalle en
+> [`s2_indices_rsi2.md`](s2_indices_rsi2.md).
+>
+> Las estrategias S1 (tendencia multi-activo) y S3 (RSI(2) en divisas) no
+> pasaron sus reglas y se descartaron sin mirar su holdout.
+
+
+
+Criterio: un bot solo entra si es rentable **por separado**, con sus mejoras
+fijadas sin optimizar y pasando las pruebas. La cartera no puede depender de
+que unos bots compensen a otros.
+
+## Quien entra
+
+| Bot | Par | PF total | PF desde 10/07/2023 | Supera al azar | Generaliza a otros pares | Decision |
+|---|---|---|---|---|---|---|
+| **EMA100 v6** | **GBPJPY H1** | 1.16 | **1.28** (80 trades) | percentil 77 | si (3 de 3 pares, PF agregado 1.08) | **Entra: candidato principal** |
+| EMA100 v6 | EURJPY H1* | 1.10 | **1.34** (86 trades) | percentil 82 | (es uno de los pares de validacion) | **Entra en demo**, no en real todavia |
+| EMA100 v6 | AUDJPY H1* | 1.09 | sin datos recientes | percentil 60 | | No: no supera al azar, walk-forward negativo |
+| EMA100 v6 | CADJPY H1* | 1.04 | sin datos recientes | percentil 33 | | No: no supera al azar, walk-forward negativo |
+| USDJPY H4 solo compras | USDJPY | 1.34** | 1.07 (33 trades) | percentil 93 | **no** (2 de 3, PF agregado 1.04) | No |
+| EURUSD H1 R2c | EURUSD | 1.75** | 1.02 (21 trades) | percentil 100 | **no** (3 de 5, PF agregado 0.96) | No |
+| GBPJPY H4 (original y solo compras) | GBPJPY | 1.15 | 0.85 / 0.74 | percentil 98 | si en el historico, pero **pierde tambien en EURJPY desde 2023** (PF 0.80) | No: la ventaja se apago |
+| USDJPY H4 original | USDJPY | 1.08 | 0.84 | percentil 90 | no (1 de 3) | No |
+| EURUSD H1 original | EURUSD | 0.90 | 0.78 | percentil 33 | no (1 de 5) | No |
+
+\* Cruces sinteticos construidos a partir de los pares contra el dolar (el
+mismo metodo dio un PF de 1.24 frente a 1.25 con datos reales de GBPJPY).
+AUDJPY y CADJPY solo llegan a marzo de 2023.
+\*\* Inflado: la variante se eligio mirando esos datos.
+
+EMA100 en EURJPY no cumple del todo las reglas de desarrollo del protocolo:
+PF 1.06 hasta julio de 2023, con la mitad 2015-2023 en 0.99. Pero se fijo sin
+ningun ajuste (SL/TP escalados por volatilidad) y gana desde 2023. Por eso
+entra en demo y no en real.
+
+## La cartera resultante
+
+**EMA100 v6 en GBPJPY H1** como unico bot para real (tras la demo), y **EMA100
+v6 en EURJPY H1** en demo, como segundo candidato.
+
+GBPJPY + EURJPY a 0.01 lotes cada uno
+([`cartera_ema100_gbpjpy_eurjpy.md`](cartera_ema100_gbpjpy_eurjpy.md)):
+
+| | Trades | Neto | PF | maxDD | Neto desde 10/07/2023 | PF desde 10/07/2023 |
+|---|---|---|---|---|---|---|
+| GBPJPY | 530 | +617 | 1.16 | -432 | +154 | 1.28 |
+| EURJPY | 504 | +297 | 1.10 | -213 | +155 | 1.34 |
+| Cartera | 1,034 | +914 | 1.14 | -530 | +310 | 1.31 |
+
+En divisa de cuenta: pips x 0.01 x 7, aproximado, sin swap.
+
+- Cada componente es rentable por separado, y la cartera tambien.
+- La diversificacion es limitada: la correlacion mensual entre los dos es 0.53
+  (ambos son compras de cruces contra el yen). El drawdown conjunto (-530) es
+  solo algo menor que la suma de los individuales (-645).
+- La probabilidad de perder en un anio sigue en torno al 34%, y hay 6 anios
+  negativos de 21.
+
+## Lo que no se ha conseguido
+
+No hay una cartera de varios bots **distintos** que sean rentables por
+separado. Los otros tres EAs, con todas las mejoras que se probaron sin
+sobreoptimizar, no pasan: o no generalizan a otros pares, o han dejado de
+funcionar desde 2023. Forzar su entrada exigiria ajustarlos a datos ya vistos.
+
+Para diversificar de verdad hacen falta bots nuevos, sobre otros mercados o
+con otras logicas (por ejemplo, no comprar siempre cruces contra el yen),
+pasados por el mismo protocolo desde el principio.
